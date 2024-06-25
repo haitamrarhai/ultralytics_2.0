@@ -34,34 +34,34 @@ backbone:
 
 # YOLOv8.0n head
 head:
-  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:1024, out:1024 (spatial upsample)
-  - [[-1, 7], 1, Concat, [1]]  # cat backbone P4 (7th layer in the backbone)
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:1024, out:512 (spatial upsample)
+  - [[-1, 5], 1, Concat, [1]]  # cat backbone P4 (5th layer in the backbone)
   - [-1, 3, C2f, [512]]  # 12
-  - [-1, 1, ResBlock_CBAM, [512, 512]]
+  - [-1, 1, ResBlock_CBAM, [512]]
 
-  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:512, out:512 (spatial upsample)
-  - [[-1, 5], 1, Concat, [1]]  # cat backbone P3 (5th layer in the backbone)
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:512, out:256 (spatial upsample)
+  - [[-1, 3], 1, Concat, [1]]  # cat backbone P3 (3rd layer in the backbone)
   - [-1, 3, C2f, [256]]  # 16 (P3/8-small)
-  - [-1, 1, ResBlock_CBAM, [256, 256]]
+  - [-1, 1, ResBlock_CBAM, [256]]
 
-  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:256, out:256 (spatial upsample)
-  - [[-1, 3], 1, Concat, [1]]  # cat backbone P2 (3rd layer in the backbone)
+  - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:256, out:128 (spatial upsample)
+  - [[-1, 1], 1, Concat, [1]]  # cat backbone P2 (1st layer in the backbone)
   - [-1, 3, C2f, [128]]  # 18 (P2/4-xsmall)
-  - [-1, 1, ResBlock_CBAM, [128, 128]]
+  - [-1, 1, ResBlock_CBAM, [128]]
 
-  - [-1, 1, Conv, [256, 3, 2]]  # in:128, out:256 (downsampling)
+  - [-1, 1, Conv, [128, 3, 2]]  # in:128, out:256 (downsampling)
   - [[-1, 16], 1, Concat, [1]]  # cat head P3 (16th layer in the head)
   - [-1, 3, C2f, [256]]  # 21 (P3/8-small)
-  - [-1, 1, ResBlock_CBAM, [256, 256]]
+  - [-1, 1, ResBlock_CBAM, [256]]
 
-  - [-1, 1, Conv, [512, 3, 2]]  # in:256, out:512 (downsampling)
+  - [-1, 1, Conv, [256, 3, 2]]  # in:256, out:512 (downsampling)
   - [[-1, 12], 1, Concat, [1]]  # cat head P4 (12th layer in the head)
   - [-1, 3, C2f, [512]]  # 24 (P4/16-medium)
-  - [-1, 1, ResBlock_CBAM, [512, 512]]
+  - [-1, 1, ResBlock_CBAM, [512]]
 
-  - [-1, 1, Conv, [1024, 3, 2]]  # in:512, out:1024 (downsampling)
+  - [-1, 1, Conv, [512, 3, 2]]  # in:512, out:1024 (downsampling)
   - [[-1, 9], 1, Concat, [1]]  # cat head P5 (9th layer in the head)
   - [-1, 3, C2f, [1024]]  # 27 (P5/32-large)
-  - [-1, 1, ResBlock_CBAM, [1024, 1024]]
+  - [-1, 1, ResBlock_CBAM, [1024]]
 
-  - [[18, 21, 24, 27], 1, Detect, [nc]]  # Detect(P2, P3, P4, P5)
+  - [[18, 21, 24, 27], 1, Segment, [nc, 32, 256]]  # Detect(P2, P3, P4, P5)
