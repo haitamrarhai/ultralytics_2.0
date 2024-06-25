@@ -21,6 +21,8 @@ __all__ = (
     "CBAM",
     "Concat",
     "RepConv",
+    "ResBlock_CBAM",
+    "EMA",
 )
 
 
