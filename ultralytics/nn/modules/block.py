@@ -37,7 +37,6 @@ __all__ = (
     "CBFuse",
     "CBLinear",
     "Silence",
-    "EMA",
 )
 
 
