@@ -46,6 +46,7 @@ from .block import (
     RepNCSPELAN4,
     ResNetLayer,
     Silence,
+    EMA,
 )
 from .conv import (
     CBAM,
@@ -62,7 +63,6 @@ from .conv import (
     RepConv,
     SpatialAttention,
     ResBlock_CBAM,
-    EMA
 )
 from .head import OBB, Classify, Detect, Pose, RTDETRDecoder, Segment, WorldDetect
 from .transformer import (
