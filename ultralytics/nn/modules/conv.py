@@ -345,29 +345,31 @@ class ResBlock_CBAM(nn.Module):
             nn.Conv2d(in_channels=places, out_channels=places, kernel_size=3, stride=stride, padding=1, bias=False),
             nn.BatchNorm2d(places),
             nn.LeakyReLU(0.1, inplace=True),
-            nn.Conv2d(in_channels=places, out_channels=places * self.expansion, kernel_size=1, stride=1,
-                      bias=False),
+            nn.Conv2d(in_channels=places, out_channels=places * self.expansion, kernel_size=1, stride=1, bias=False),
             nn.BatchNorm2d(places * self.expansion),
         )
-        # self.cbam = CBAM(c1=places * self.expansion, c2=places * self.expansion, )
         self.cbam = CBAM(c1=places * self.expansion)
 
-        if self.downsampling:
+        if self.downsampling or in_places != places * self.expansion:
             self.downsample = nn.Sequential(
                 nn.Conv2d(in_channels=in_places, out_channels=places * self.expansion, kernel_size=1, stride=stride,
                           bias=False),
                 nn.BatchNorm2d(places * self.expansion)
             )
+        else:
+            self.downsample = None
+
         self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
         residual = x
         out = self.bottleneck(x)
         out = self.cbam(out)
-        if self.downsampling:
+        if self.downsample is not None:
             residual = self.downsample(x)
 
         out += residual
         out = self.relu(out)
         return out
+
 
