@@ -17,19 +17,19 @@ backbone:
   - [-1, 1, Conv, [64, 3, 2]]  # 0-P1/2
   - [-1, 1, Conv, [128, 3, 2]]  # 1-P2/4
   - [-1, 3, C2f, [128, True]]
-  - [-1, 1, EMA, [128]]  # Efficient-Multiscale-Attention added after P2
+ # - [-1, 1, EMA, [128]]  # Efficient-Multiscale-Attention added after P2
 
   - [-1, 1, Conv, [256, 3, 2]]  # 4-P3/8
   - [-1, 6, C2f, [256, True]]
-  - [-1, 1, EMA, [256]]  # Efficient-Multiscale-Attention added after P3
+ # - [-1, 1, EMA, [256]]  # Efficient-Multiscale-Attention added after P3
 
   - [-1, 1, Conv, [512, 3, 2]]  # 7-P4/16
   - [-1, 6, C2f, [512, True]]
-  - [-1, 1, EMA, [512]]  # Efficient-Multiscale-Attention added after P4
+#  - [-1, 1, EMA, [512]]  # Efficient-Multiscale-Attention added after P4
 
   - [-1, 1, Conv, [1024, 3, 2]]  # 10-P5/32
   - [-1, 3, C2f, [1024, True]]
-  - [-1, 1, EMA, [1024]]  # Efficient-Multiscale-Attention added after P5
+ # - [-1, 1, EMA, [1024]]  # Efficient-Multiscale-Attention added after P5
   - [-1, 1, SPPF, [1024, 5]]  # 13
 
 # YOLOv8.0n head
@@ -37,31 +37,37 @@ head:
   - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:1024, out:512 (spatial upsample)
   - [[-1, 10], 1, Concat, [1]]  # cat backbone P4 (10th layer in the backbone)
   - [-1, 3, C2f, [512]]  # 16
+  - [-1, 1, EMA, [512]]
   - [-1, 1, ResBlock_CBAM, [512]]
 
   - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:512, out:256 (spatial upsample)
   - [[-1, 7], 1, Concat, [1]]  # cat backbone P3 (7th layer in the backbone)
   - [-1, 3, C2f, [256]]  # 20 (P3/8-small)
+  - [-1, 1, EMA, [256]]
   - [-1, 1, ResBlock_CBAM, [256]]
 
   - [-1, 1, nn.Upsample, [None, 2, 'nearest']]  # in:256, out:128 (spatial upsample)
   - [[-1, 4], 1, Concat, [1]]  # cat backbone P2 (4th layer in the backbone)
   - [-1, 3, C2f, [128]]  # 24 (P2/4-xsmall)
+  - [-1, 1, EMA, [128]]
   - [-1, 1, ResBlock_CBAM, [128]]
 
   - [-1, 1, Conv, [128, 3, 2]]  # in:128, out:256 (downsampling)
   - [[-1, 20], 1, Concat, [1]]  # cat head P3 (20th layer in the head)
   - [-1, 3, C2f, [256]]  # 28 (P3/8-small)
+  - [-1, 1, EMA, [256]]
   - [-1, 1, ResBlock_CBAM, [256]]
 
   - [-1, 1, Conv, [256, 3, 2]]  # in:256, out:512 (downsampling)
   - [[-1, 16], 1, Concat, [1]]  # cat head P4 (16th layer in the head)
   - [-1, 3, C2f, [512]]  # 32 (P4/16-medium)
+  - [-1, 1, EMA, [512]]
   - [-1, 1, ResBlock_CBAM, [512]]
 
   - [-1, 1, Conv, [512, 3, 2]]  # in:512, out:1024 (downsampling)
   - [[-1, 13], 1, Concat, [1]]  # cat head P5 (13th layer in the head)
   - [-1, 3, C2f, [1024]]  # 36 (P5/32-large)
+  - [-1, 1, EMA, [1024]]
   - [-1, 1, ResBlock_CBAM, [1024]]
 
   - [[24, 28, 32, 36], 1, Segment, [nc, 32, 256]]  # Segment(P2, P3, P4, P5)
