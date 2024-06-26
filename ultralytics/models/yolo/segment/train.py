@@ -7,6 +7,11 @@ from ultralytics.nn.tasks import SegmentationModel
 from ultralytics.utils import DEFAULT_CFG, RANK
 from ultralytics.utils.plotting import plot_images, plot_results
 
+import torch
+
+# Disable deterministic algorithms
+torch.use_deterministic_algorithms(False)
+
 
 class SegmentationTrainer(yolo.detect.DetectionTrainer):
     """
