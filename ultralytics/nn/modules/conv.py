@@ -363,19 +363,19 @@ class ResBlock_CBAM(nn.Module):
         self.relu = nn.ReLU(inplace=True)
 
     def forward(self, x):
-        print(f'Input shape: {x.shape}')
+        #print(f'Input shape: {x.shape}')
         residual = x
         out = self.bottleneck(x)
-        print(f'After bottleneck: {out.shape}')
+        #print(f'After bottleneck: {out.shape}')
         out = self.cbam(out)
-        print(f'After CBAM: {out.shape}')
+        #print(f'After CBAM: {out.shape}')
         if self.downsample is not None:
             residual = self.downsample(x)
-            print(f'After downsample: {residual.shape}')
+            #print(f'After downsample: {residual.shape}')
     
         out += residual
         out = self.relu(out)
-        print(f'Output shape: {out.shape}')
+        #print(f'Output shape: {out.shape}')
         return out
 
 
